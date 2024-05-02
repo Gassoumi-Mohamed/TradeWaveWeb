@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+
+    {% block body %}
+        <div class="app-content content">
+          <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body"><!-- ICO Token &  Distribution-->
+    <div class="row match-height">
+        <div id="recent-transactions" class="col-12">
+            <h6 class="my-2">Media</h6>
+            <div class="card">
+                <div class="card-content">
+        <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+                {{ form_start(form, {'attr': {'class': 'contact-us', 'novalidate': 'novalidate'}}) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="type">Type</label>
+                        {{ form_widget(form.type, {'attr': {'class': 'form-control', 'placeholder': 'type'}}) }}
+                        {% if form_errors(form.type) is not empty %}
+                            <div class="alert alert-danger">{{ form_errors(form.type) }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="description">Description</label>
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'description'}}) }}
+                        {% if form_errors(form.description) is not empty %}
+                            <div class="alert alert-danger">{{ form_errors(form.description) }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="imagePath">Image</label>
+                        {{ form_widget(form.imagePath, {'attr': {'class': 'form-control', 'placeholder': 'imagePath'}}) }}
+                        {% if form_errors(form.imagePath) is not empty %}
+                            <div class="alert alert-danger">{{ form_errors(form.imagePath) }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="publicite">Publicite</label>
+                        {{ form_widget(form.publicite, {'attr': {'class': 'form-control', 'placeholder': 'publicite'}}) }}
+                        {% if form_errors(form.publicite) is not empty %}
+                            <div class="alert alert-danger">{{ form_errors(form.publicite) }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-danger btn-buy-now">Update</button>
+                {{ form_end(form) }}
+                <br><br>
+                <a class="btn btn-danger btn-buy-now" href="{{ path('app_media_index') }}">back to list</a>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    {% endblock %}
+    

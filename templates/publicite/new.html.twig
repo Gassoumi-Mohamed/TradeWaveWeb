@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <div class="app-content content">
+      <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body"><!-- ICO Token &  Distribution-->
+<div class="row match-height">
+    <div id="recent-transactions" class="col-12">
+        <h6 class="my-2">Publicites</h6>
+        <div class="card">
+            <div class="card-content">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            {{ form_start(form, {'attr': {'class': 'contact-us', 'novalidate': 'novalidate'}}) }}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="typePub">TypePub</label>
+                    {{ form_widget(form.typePub, {'attr': {'class': 'form-control', 'placeholder': 'TypePub'}}) }}
+                    {% if form_errors(form.typePub) is not empty %}
+                        <div class="alert alert-danger">{{ form_errors(form.typePub) }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="datePub">DatePub</label>
+                    {{ form_widget(form.datePub, {'attr': {'class': 'form-control', 'placeholder': 'DatePub'}}) }}
+                    {% if form_errors(form.datePub) is not empty %}
+                        <div class="alert alert-danger">{{ form_errors(form.datePub) }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="duration">Duration</label>
+                    {{ form_widget(form.duration, {'attr': {'class': 'form-control', 'placeholder': 'Duration'}}) }}
+                    {% if form_errors(form.duration) is not empty %}
+                        <div class="alert alert-danger">{{ form_errors(form.duration) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-danger btn-buy-now">Add</button>
+            {{ form_end(form) }}
+            <br><br>
+            <a class="btn btn-danger btn-buy-now" href="{{ path('app_publicite_index') }}">back to list</a>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
