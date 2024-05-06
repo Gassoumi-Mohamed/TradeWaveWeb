@@ -10,24 +10,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email; 
-use App\Entity\User ; 
+use Symfony\Component\Mime\Email; use Doctrine\Persistence\ManagerRegistry;
 
+use App\Entity\User ; 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class SecurityController extends AbstractController
 {
     
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
+    #[Route(path: '/login', name: 'app_login')]
+    public function login(SessionInterface $session,Request $request, AuthenticationUtils $authenticationUtils): Response
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
         // Récupérer les erreurs d'authentification, le dernier email saisi, etc.
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastEmail = $authenticationUtils->getLastUsername();
-    
-        // Vérifier si le formulaire de connexion a été soumis
-        if ($request->isMethod('POST')) {
+        $user = $session->get('user');
+        if ($user){
+            if ($user->getType() === 'Admin') {
+                // Rediriger l'administrateur vers l'interface d'administration
+                return $this->render('user/UserList.html.twig', [
+                    'users' => $users, // Remplacez $users par la variable contenant les données des utilisateurs
+                ]);
+            } else {
+                // Rediriger l'utilisateur vers son interface utilisateur
+                return $this->render('Base.html.twig');
+            }
+        }else{ if ($request->isMethod('POST')) {
             // Récupérer les données soumises dans le formulaire
             $submittedEmail = $request->request->get('email');
             $submittedPassword = $request->request->get('password');
@@ -39,6 +50,7 @@ class SecurityController extends AbstractController
             // Vérifier si l'utilisateur existe et si le mot de passe est correct
             if ($user && $user->getPassword() === $submittedPassword) {
                 // Vérifier le type de l'utilisateur
+                $session->set('user', $user);
                 if ($user->getType() === 'Admin') {
                     // Rediriger l'administrateur vers l'interface d'administration
                     return $this->render('user/UserList.html.twig', [
@@ -53,45 +65,80 @@ class SecurityController extends AbstractController
                 $error = "Adresse email ou mot de passe incorrect";
             }
         }
+    }
     
         // Afficher le formulaire de connexion avec les données appropriées
         return $this->render('security/login.html.twig', [
             'last_email' => $lastEmail,
             'error'      => $error,
         ]);
+      
     }
+    
 
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): void
+    public function logout(SessionInterface $session): Response
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        $session->set('user', null);
+
+        return $this->redirectToRoute('app_login');
     }
 
 
 
-    /**
- * @Route("/verify", name="verify-email", methods={"POST","GET"})
- */
-           public function verifyemail( MailerInterface $mailer): Response
+  
+       #[Route('/verify', name:'verify-email', methods:["POST","GET"])]
+           public function verifyemail( SessionInterface $session,MailerInterface $mailer ,Request $request, ManagerRegistry $managerRegistry): Response
           {
-   
-   $code=1;
-        // $emailContent = $this->render('user/email.html.twig', ['code' => $code]);
-        $emailContent = "test";
+            $user = $session->get('user');
+            // $userEmail=$user.getEmail();
 
-        $email = (new Email())
+            $htmlContent = "<html>
+    <head>
+        <title>Email de confirmation</title>
+    </head>
+    <body>
+        <p>Cher destinataire,{{ lname }} {{ fname }}</p>
+        <p>Votre code à 6 chiffres est: <strong>{{ code }}</strong></p>
+    </body>
+    </html>";
+            if ($request->isMethod('POST')) {
+                $code_tep = $request->request->get('code');
+                $savedCode = $session->get('code');
+                if (!empty($code_tep) && !empty($savedCode)) {
+                    if ($code_tep == $savedCode) {
+                        $em = $managerRegistry->getManager();
+                        $em->persist($user);
+                        $em->flush();
+                        return $this->redirectToRoute('app_login');
+                    }
+    
+                }
+            } else{
+                $code = mt_rand(100000, 999999);
+                $session->set('code', $code);
+                $fname = $user->getNom();
+                $lname = $user->getPrenom();
+                $htmlContent = str_replace(['{{ code }}', '{{ fname }}', '{{ lname }}'], [$code, $fname, $lname], $htmlContent);
+                $user = $session->get('user');
+                $email = (new Email())
             ->from('yo.yotalent7@gmail.com') 
             ->to('Mohamed.Gassoumi@esprit.tn')
             ->subject('Confirmation de votre compte')
-            ->html("test");
+            ->html($htmlContent);
 
         $mailer->send($email);
+    }
+
+    return $this->render('user/ValidationCompte.html.twig', [
+        'email' => $user->getEmail(),
+        'code' => $code
+    ]);
+    
+
+}    
 
        
-
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-   
-    }
 
 
 }

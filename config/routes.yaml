@@ -15,7 +15,10 @@ app_login:
     path: /login
     controller: App\Controller\SecurityController::login
     methods: [GET, POST]
-
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+    
 app_media_index:
     path: /media
     controller: App\Controller\MediaController::index
@@ -28,22 +31,45 @@ user_delete:
     path: /user/delete/{id}
     controller: App\Controller\UserController::delete
 
-app_user_index:
-    path: /users
-    controller: 'App\Controller\UserListController::index'
+# app_user_index:
+#     path: /users
+#     controller: 'App\Controller\UserListController::index'
 
-
+verify-email:
+    path: /verify
+    controller: App\Controller\SecurityController::verifyemail
+    methods: [GET, POST]
 
 
 user_delete_list:
     path: '/user/{id}'
-    controller: 'App\Controller\UserListController::deleteUser'
+    controller: 'App\Controller\UserListController:user_delete_list'
     methods: ['POST']
 
 
 user_search:
     path: /votre-url-de-recherche
     controller: 'App\Controller\UserController::search'
+
+
+app_user_delete:
+    path: /user/{id}
+    controller: App\Controller\UserController::user_delete_list
+    methods: ['GET, POST']
+
+
+users:
+    path: //user/{id}
+    methods: [GET, POST]
+    controller: 'App\Controller\UserListController::user_delet'
+
+app_email:
+    path: /email
+    methods: [GET, POST]
+    controller: 'App\Controller\ResetPasswordController:: email'
+
+   
+
 
 
 

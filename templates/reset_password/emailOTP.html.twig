@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+        <title>Email verification</title>
+        <link href="{{ asset('assets/css/emailOTP.css') }}" rel="stylesheet"/>
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+
+    </head>
+
+    <body class="bg-gray">
+        <div class="form-container">
+            <div class="logo-container">
+                Vérification d'adresse email
+            </div>
+
+            <form class="form" id="myform" action="{{ path('app_verifyemail')}}" method="POST">
+                <div class="form-group">
+                    <label for="email" >Email</label>
+
+                    <input type="text" id="email" name="email" placeholder="Votre email" >
+
+                    <div id="emailError" style="  border: 1px solid red; border-radius:3px; margin-top:4px; padding-left:4px; padding:0px; display: none;">
+                        <div class="error-container">
+                            <div class="icon-container">
+                                <i class="fas fa-exclamation fa-xs" style="color: white;"></i>
+                            </div>
+                            <div class="error-message" style="font-size: 15px">Le champs <b>Email</b> est requis.</div>
+                        </div>
+                    </div>
+
+                    <div id="emailRegex" style="border: 1px solid red; border-radius:3px; margin-top:4px; padding-left:4px; padding:0px; display: none;">
+                        <div class="error-container">
+                            <div class="icon-container">
+                                <i id=" icon"class="fas fa-exclamation fa-xs" style="color: white;"></i>
+                            </div>
+                            <div class="error-message" style="font-size: 15px">Veuillez saisir une <b>adresse email</b> valide.</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button id="submitBtn" class="form-submit-btn" type="submit"  >Envoyer code </button>
+                <p style="font-size:17px" class="signup-link"> Vous n'avez pas de compte ?
+                    <a href="{{ path('app_sinscrire')}}" class="signup-link link"> S'inscrire maintenant </a>
+                </p>
+            </form>
+        </div>
+
+        <script src="//code.jquery.com/jquery.js"></script>
+        <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+        {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+
+        <script>
+
+            let myForm = document.getElementById('myform');
+            let myRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            let emailInput = document.getElementById('email');
+            let emailError = document.getElementById('emailError');
+            let emailRegex = document.getElementById('emailRegex');
+            // let emailExistance = document.getElementById('emailExistance');
+
+            myForm.addEventListener('submit', function(e) {
+                if (emailInput.value.trim() === "") {
+                    emailError.style.display = 'block';
+                    emailRegex.style.display = 'none';
+                    // emailExistance.style.display='none';
+                    e.preventDefault();
+
+                } else if (!myRegex.test(emailInput.value)) {
+                    emailRegex.style.display = 'block';
+                    emailError.style.display = 'none';
+                    // emailExistance.style.display='none';
+                    e.preventDefault();
+
+                } else {
+                    emailError.style.display = 'none';
+                    emailRegex.style.display = 'none';
+                }
+            });
+
+        </script>
+    </body>
+</html>

@@ -9,12 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'register')]
-    public function register(Request $request): Response
+    public function register(Request $request , SessionInterface $session): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -29,7 +30,8 @@ class RegisterController extends AbstractController
             $entityManager->flush();
 
             // Rediriger l'utilisateur vers une page de confirmation ou de connexion
-            return $this->redirectToRoute('app_login');
+            $session->set('user', $user);
+            return $this->redirectToRoute('verify-email', ['user'=>$user]);
         }
 
         $this->addFlash('error', 'Le formulaire comporte des erreurs.');
