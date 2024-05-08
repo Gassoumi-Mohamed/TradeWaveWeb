@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Controller\UserController;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,13 +19,7 @@ use App\Repository\UserRepository;
 
 class UserListController extends AbstractController
 {
-  
-    private $userController;
 
-    public function __construct(UserController $userController)
-    {
-        $this->userController = $userController;
-    }
     #[Route('/users', name: 'user_list')]
      public function userList(Request $request): Response
     {
@@ -42,26 +37,26 @@ class UserListController extends AbstractController
             'searchTerm' => $searchTerm, // Passez le terme de recherche à la vue pour l'affichage
         ]);
     }
-    #[Route('/user/{id}', name: 'user_delete_list', methods: ['GET, POST'])]
-    public function user_delet(Request $request, $id, UserController $userController): Response
+    #[Route('/userdelete/{id}', name: 'user_delete_list')]
+    public function user_delete(Request $request, $id, ManagerRegistry $doctrine, UserRepository $repository): Response
 {
-    // Récupérer l'EntityManager
-    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager =$doctrine->getManager();
 
-    // Récupérer l'utilisateur en fonction de l'ID
     $user = $entityManager->getRepository(User::class)->find($id);
 
-    // Vérifier si l'utilisateur existe
     if (!$user) {
         throw $this->createNotFoundException('Utilisateur non trouvé');
     }
 
-    // Appeler la méthode de suppression de UserController
-    $response = $userController->delete($request, $user, $entityManager);
+    $entityManager->remove($user);
+    $entityManager->flush();
 
-    // Rediriger en fonction de la réponse de la suppression
-    // Rediriger vers la page qui affiche la liste des utilisateurs
-    return $this->redirectToRoute('user_list');
+    $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+    return $this->render('user/UserList.html.twig',[
+        'users' => $users,
+        // 'searchTerm' => $searchTerm
+
+    ]);
 }
 
 

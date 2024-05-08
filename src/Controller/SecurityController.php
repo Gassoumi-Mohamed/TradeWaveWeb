@@ -121,14 +121,18 @@ class SecurityController extends AbstractController
                 $lname = $user->getPrenom();
                 $htmlContent = str_replace(['{{ code }}', '{{ fname }}', '{{ lname }}'], [$code, $fname, $lname], $htmlContent);
                 $user = $session->get('user');
-                $email = (new Email())
-            ->from('yo.yotalent7@gmail.com') 
-            ->to('Mohamed.Gassoumi@esprit.tn')
-            ->subject('Confirmation de votre compte')
-            ->html($htmlContent);
+                $email = $user->getEmail();
+                
+                if (!empty($email)) {
+                  $email = (new Email())
+                  ->from('yo.yotalent7@gmail.com') 
+                  ->to($email)  // Utilisez l'adresse e-mail récupérée du formulaire
+                  ->subject('Confirmation de votre compte')
+                  ->html($htmlContent);
 
-        $mailer->send($email);
-    }
+                   $mailer->send($email);
+                }
+            }
 
     return $this->render('user/ValidationCompte.html.twig', [
         'email' => $user->getEmail(),

@@ -3,11 +3,12 @@
 <html>
 
     <head>
+    
 
         <title>Email verification</title>
         <link href="{{ asset('assets/css/emailOTP.css') }}" rel="stylesheet"/>
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+        {# <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}"> #}
 
     </head>
 
@@ -43,16 +44,18 @@
 
                 </div>
 
-                <button id="submitBtn" class="form-submit-btn" type="submit"  >Envoyer code </button>
+                <button id="submitBtn" class="form-submit-btn btn-primary" type="submit" style="background-color:#243ECF" >Envoyer code </button>
                 <p style="font-size:17px" class="signup-link"> Vous n'avez pas de compte ?
-                    <a href="{{ path('app_sinscrire')}}" class="signup-link link"> S'inscrire maintenant </a>
+                    <a 
+                    {# href="{{ path('app_sinscrire')}}"  #}
+                    class="signup-link link"> S'inscrire maintenant </a>
                 </p>
             </form>
         </div>
 
         <script src="//code.jquery.com/jquery.js"></script>
-        <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
-        {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+        {# <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script> #}
+        {# {{ include('@MercurySeriesFlashy/flashy.html.twig') }} #}
 
         <script>
 

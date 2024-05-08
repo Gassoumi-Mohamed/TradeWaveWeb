@@ -111,7 +111,7 @@
    <li class="nav-item nav-search">
     <a class="nav-link nav-link-search" href="#"><i class="ficon ft-search"></i></a>
     <div class="search-input text-center"> <!-- Ajout de la classe text-center pour centrer le champ de recherche -->
-        <form id="search-form" action="{{ path('user_search') }}" method="get"> <!-- Assurez-vous que l'action pointe vers la route de recherche appropriée -->
+        <form id="search-form" action="{{ path('rechercher') }}" method="get"> <!-- Assurez-vous que l'action pointe vers la route de recherche appropriée -->
             <input id="search-input" class="input" type="text" name="search" placeholder="Rechercher utilisateur...">
             <button type="submit" style="display: none;"></button> <!-- Le bouton de soumission est masqué -->
         </form>
@@ -183,26 +183,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.nom }}</td>
-                            <td>{{ user.prenom }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.passeport }}</td>
-                            <td>{{ user.adresse }}</td>
-                            <td>{{ user.type }}</td>
-                            <td>
-                            <div id="search-results-container">
-                         <form  method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
-    <button type="submit" class="btn btn-danger btn-sm" action="{{ path('user_delete_list', {'id': user.id}) }}">Supprimer</button>
-</form>
-
-                         </div>
-                             </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                      {% for user in users %}
+        <tr>
+            <td>{{ user.nom }}</td>
+            <td>{{ user.prenom }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.passeport }}</td>
+            <td>{{ user.adresse }}</td>
+            <td>{{ user.type }}</td>
+            <td>
+                <form method="POST" action="{{ path('user_delete_list', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
         </div>
     </div>
 {% endblock %}
